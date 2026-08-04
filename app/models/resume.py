@@ -19,6 +19,7 @@ class Resume(db.Model):
     # Future fields for analysis (filled later by ATS/parser modules)
     ats_score = db.Column(db.Integer, nullable=True)
     status = db.Column(db.String(20), default="uploaded")  # uploaded / analyzed / failed
+    extracted_text = db.Column(db.Text, nullable=True)
 
     user = db.relationship("User", backref=db.backref("resumes", lazy=True))
 

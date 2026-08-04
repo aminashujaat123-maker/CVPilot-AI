@@ -1,0 +1,32 @@
+{% extends "layout/base.html" %} {% block title %}Resume Analysis - CVPilot AI{%
+endblock %} {% block content %} {% include "layout/navbar.html" %}
+
+<div class="dashboard-container">
+  <div class="dashboard-welcome">
+    <h1>{{ resume.original_filename }}</h1>
+    <p>
+      Extracted content preview — ATS scoring and keyword analysis coming soon.
+    </p>
+  </div>
+
+  {% if resume.extracted_text %}
+  <div class="text-preview-box">
+    <pre>{{ resume.extracted_text }}</pre>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>
+      ⚠️ Text extraction failed for this resume. It may be image-based,
+      password-protected, or corrupted.
+    </p>
+  </div>
+  {% endif %}
+
+  <a
+    href="{{ url_for('resume.history') }}"
+    class="auth-footer-text"
+    style="display: block; margin-top: 20px"
+    >← Back to History</a
+  >
+</div>
+{% endblock %}

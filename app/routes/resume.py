@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 from app.extensions import db
 from app.models.resume import Resume
 from app.utils.validators import allowed_file, get_file_extension
+from app.services.parser import extract_text, basic_clean_text
 
 resume_bp = Blueprint("resume", __name__)
 
@@ -16,7 +17,6 @@ resume_bp = Blueprint("resume", __name__)
 @login_required
 def upload():
     if request.method == "POST":
-        # Check if a file was actually submitted
         if "resume_file" not in request.files:
             flash("No file selected.", "error")
             return redirect(url_for("resume.upload"))
@@ -33,36 +33,39 @@ def upload():
             flash("Invalid file type. Only PDF and DOCX files are allowed.", "error")
             return redirect(url_for("resume.upload"))
 
-        # Secure the original filename (sanitizes special characters)
         original_filename = secure_filename(file.filename)
         file_ext = get_file_extension(original_filename)
-
-        # Generate a unique stored filename to avoid collisions between users
         stored_filename = f"{uuid.uuid4().hex}.{file_ext}"
 
         upload_folder = current_app.config["UPLOAD_FOLDER"]
-        os.makedirs(upload_folder, exist_ok=True)  # ensure folder exists
+        os.makedirs(upload_folder, exist_ok=True)
 
         file_path = os.path.join(upload_folder, stored_filename)
         file.save(file_path)
 
-        # Get file size in KB
         file_size_kb = round(os.path.getsize(file_path) / 1024)
 
-        # Save record in database
+        raw_text = extract_text(file_path, file_ext)
+        cleaned_text = basic_clean_text(raw_text) if raw_text else None
+
         new_resume = Resume(
             user_id=current_user.id,
             original_filename=original_filename,
             stored_filename=stored_filename,
             file_type=file_ext,
             file_size_kb=file_size_kb,
-            status="uploaded"
+            status="uploaded" if cleaned_text else "failed",
+            extracted_text=cleaned_text
         )
 
         db.session.add(new_resume)
         db.session.commit()
 
-        flash("Resume uploaded successfully!", "success")
+        if cleaned_text:
+            flash("Resume uploaded and parsed successfully!", "success")
+        else:
+            flash("Resume uploaded, but text extraction failed. The file may be image-based or corrupted.", "error")
+
         return redirect(url_for("resume.history"))
 
     return render_template("dashboard/upload.html")
@@ -80,12 +83,10 @@ def history():
 def delete(resume_id):
     resume = Resume.query.get_or_404(resume_id)
 
-    # Security check — user can only delete their own resumes
     if resume.user_id != current_user.id:
         flash("Unauthorized action.", "error")
         return redirect(url_for("resume.history"))
 
-    # Delete the physical file
     upload_folder = current_app.config["UPLOAD_FOLDER"]
     file_path = os.path.join(upload_folder, resume.stored_filename)
     if os.path.exists(file_path):
@@ -96,3 +97,15 @@ def delete(resume_id):
 
     flash("Resume deleted successfully.", "success")
     return redirect(url_for("resume.history"))
+
+
+@resume_bp.route("/resume/view/<int:resume_id>")
+@login_required
+def view(resume_id):
+    resume = Resume.query.get_or_404(resume_id)
+
+    if resume.user_id != current_user.id:
+        flash("Unauthorized action.", "error")
+        return redirect(url_for("resume.history"))
+
+    return render_template("dashboard/analysis.html", resume=resume)
