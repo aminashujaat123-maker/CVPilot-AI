@@ -24,3 +24,7 @@ reports/
 # OS Files
 .DS_Store
 Thumbs.db
+
+reports/uploads/
+database/*.db
+.env

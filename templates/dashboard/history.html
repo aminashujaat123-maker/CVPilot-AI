@@ -1,0 +1,58 @@
+{% extends "layout/base.html" %} {% block title %}Resume History - CVPilot AI{%
+endblock %} {% block content %} {% include "layout/navbar.html" %}
+
+<div class="dashboard-container">
+  <div class="dashboard-welcome">
+    <h1>Resume History 🕒</h1>
+    <p>All your uploaded resumes in one place.</p>
+  </div>
+
+  {% if resumes %}
+  <div class="history-list">
+    {% for resume in resumes %}
+    <div class="history-item">
+      <div class="history-info">
+        <div class="history-icon">
+          {{ '📕' if resume.file_type == 'pdf' else '📘' }}
+        </div>
+        <div>
+          <h4>{{ resume.original_filename }}</h4>
+          <p>
+            {{ resume.file_size_kb }} KB • Uploaded {{
+            resume.uploaded_at.strftime('%d %b %Y, %I:%M %p') }}
+          </p>
+        </div>
+      </div>
+      <div class="history-actions">
+        <span class="status-badge status-{{ resume.status }}"
+          >{{ resume.status }}</span
+        >
+        <form
+          method="POST"
+          action="{{ url_for('resume.delete', resume_id=resume.id) }}"
+          onsubmit="return confirm('Delete this resume?');"
+        >
+          <button type="submit" class="btn-delete">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>No resumes uploaded yet.</p>
+    <a
+      href="{{ url_for('resume.upload') }}"
+      class="btn-primary"
+      style="
+        display: inline-block;
+        width: auto;
+        padding: 12px 30px;
+        text-decoration: none;
+      "
+      >Upload Your First Resume</a
+    >
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

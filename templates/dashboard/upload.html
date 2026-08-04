@@ -1,0 +1,69 @@
+{% extends "layout/base.html" %} {% block title %}Upload Resume - CVPilot AI{%
+endblock %} {% block content %} {% include "layout/navbar.html" %}
+
+<div class="dashboard-container">
+  <div class="dashboard-welcome">
+    <h1>Upload Your Resume 📤</h1>
+    <p>Upload a PDF or DOCX file to begin analysis. Max file size: 5 MB.</p>
+  </div>
+
+  <div class="upload-box">
+    <form
+      method="POST"
+      action="{{ url_for('resume.upload') }}"
+      enctype="multipart/form-data"
+      id="uploadForm"
+    >
+      <label for="resume_file" class="upload-dropzone" id="dropzone">
+        <div class="upload-icon">📄</div>
+        <p class="upload-text" id="uploadText">
+          Click to browse or drag & drop your resume here
+        </p>
+        <p class="upload-subtext">Supported formats: PDF, DOCX</p>
+        <input
+          type="file"
+          name="resume_file"
+          id="resume_file"
+          accept=".pdf,.docx"
+          hidden
+          required
+        />
+      </label>
+
+      <button type="submit" class="btn-primary" style="margin-top: 20px">
+        Upload Resume
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const fileInput = document.getElementById("resume_file");
+  const uploadText = document.getElementById("uploadText");
+  const dropzone = document.getElementById("dropzone");
+
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length > 0) {
+      uploadText.textContent = fileInput.files[0].name;
+    }
+  });
+
+  dropzone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropzone.classList.add("dragover");
+  });
+
+  dropzone.addEventListener("dragleave", () => {
+    dropzone.classList.remove("dragover");
+  });
+
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("dragover");
+    if (e.dataTransfer.files.length > 0) {
+      fileInput.files = e.dataTransfer.files;
+      uploadText.textContent = e.dataTransfer.files[0].name;
+    }
+  });
+</script>
+{% endblock %}

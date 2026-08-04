@@ -1,0 +1,7 @@
+<nav class="navbar">
+  <div class="navbar-brand"><span class="brand-icon">📄</span> CVPilot AI</div>
+  <div class="navbar-right">
+    <span class="navbar-user">Hi, {{ current_user.full_name }}</span>
+    <a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a>
+  </div>
+</nav>

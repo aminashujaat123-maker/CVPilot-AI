@@ -1,15 +1,16 @@
 from app import create_app
-from flask import render_template
-import os
+from flask import redirect, url_for
+from flask_login import current_user
 
 app = create_app()
 
-print("Current Directory:", os.getcwd())
-print("Template Folder:", app.template_folder)
 
 @app.route("/")
 def home():
-    return "<h1>CVPilot Working</h1>"
+    if current_user.is_authenticated:
+        return redirect(url_for("dashboard.dashboard"))
+    return redirect(url_for("auth.login"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
