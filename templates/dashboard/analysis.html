@@ -52,7 +52,18 @@ endblock %} {% block content %} {% include "layout/navbar.html" %}
       {% endfor %}
     </div>
   </div>
-
+  <a
+    href="{{ url_for('resume.download_report', resume_id=resume.id) }}"
+    class="btn-primary"
+    style="
+      display: inline-block;
+      width: auto;
+      padding: 12px 30px;
+      text-decoration: none;
+      margin-top: 10px;
+    "
+    >📥 Download PDF Report</a
+  >
   <a
     href="{{ url_for('resume.history') }}"
     class="auth-footer-text"

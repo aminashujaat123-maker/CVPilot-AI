@@ -2,45 +2,78 @@
 endblock %} {% block content %} {% include "layout/navbar.html" %}
 
 <div class="dashboard-container">
-  <div class="dashboard-welcome">
-    <h1>Welcome back, {{ current_user.full_name }} 👋</h1>
-    <p>Here's an overview of your resume optimization journey.</p>
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <div>
+      <h1>Welcome back, {{ current_user.full_name.split(' ')[0] }} 👋</h1>
+      <p>Here's an overview of your resume optimization journey.</p>
+    </div>
+    <a href="{{ url_for('resume.upload') }}" class="btn-banner">+ New Resume</a>
   </div>
 
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <span class="stat-value">{{ total_resumes }}</span>
+      <span class="stat-label">Total Resumes</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">{{ analyzed_count }}</span>
+      <span class="stat-label">Analyzed</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">
+        {% if latest_resume and latest_resume.ats_score is not none %} {{
+        latest_resume.ats_score }} {% else %} — {% endif %}
+      </span>
+      <span class="stat-label">Latest Score</span>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <h2 class="section-heading">Quick Actions</h2>
   <div class="dashboard-cards">
-    <a
-      href="{{ url_for('resume.upload') }}"
-      style="text-decoration: none; color: inherit"
-    >
-      <div class="dashboard-card">
-        <div class="card-icon">📄</div>
-        <h3>Upload Resume</h3>
-        <p>Upload a new resume to get started with analysis.</p>
-      </div>
+    <a href="{{ url_for('resume.upload') }}" class="dashboard-card">
+      <div class="card-icon-circle icon-indigo">📄</div>
+      <h3>Upload Resume</h3>
+      <p>Upload a new resume to get started with analysis.</p>
     </a>
 
-    <div class="dashboard-card">
-      <div class="card-icon">🎯</div>
+    {% if latest_resume and latest_resume.ats_score is not none %}
+    <a
+      href="{{ url_for('resume.analyze', resume_id=latest_resume.id) }}"
+      class="dashboard-card"
+    >
+      <div class="card-icon-circle icon-green">🎯</div>
+      <h3>ATS Score</h3>
+      <p>
+        Your latest resume scored
+        <strong>{{ latest_resume.ats_score }}/100</strong>. View details.
+      </p>
+    </a>
+    {% else %}
+    <div class="dashboard-card card-disabled">
+      <div class="card-icon-circle icon-green">🎯</div>
       <h3>ATS Score</h3>
       <p>No resume analyzed yet. Upload one to see your score.</p>
     </div>
+    {% endif %}
 
-    <a
-      href="{{ url_for('resume.history') }}"
-      style="text-decoration: none; color: inherit"
-    >
-      <div class="dashboard-card">
-        <div class="card-icon">🕒</div>
-        <h3>History</h3>
-        <p>View your past resume analyses and reports.</p>
-      </div>
+    <a href="{{ url_for('resume.history') }}" class="dashboard-card">
+      <div class="card-icon-circle icon-amber">🕒</div>
+      <h3>History</h3>
+      <p>
+        {{ total_resumes }} resume(s) uploaded, {{ analyzed_count }} analyzed.
+      </p>
     </a>
 
-    <div class="dashboard-card">
-      <div class="card-icon">⚙️</div>
+    <a href="{{ url_for('settings.settings') }}" class="dashboard-card">
+      <div class="card-icon-circle icon-purple">⚙️</div>
       <h3>Settings</h3>
       <p>Manage your profile, password, and preferences.</p>
-    </div>
+    </a>
   </div>
 </div>
 {% endblock %}

@@ -43,5 +43,7 @@ def create_app():
 
     from app.routes.dashboard import dashboard_bp
     app.register_blueprint(dashboard_bp)
+    from app.routes.settings import settings_bp
+    app.register_blueprint(settings_bp)
 
     return app

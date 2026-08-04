@@ -1,6 +1,7 @@
 import os
 import uuid
 
+from app.services.report import generate_resume_report
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -138,4 +139,33 @@ def analyze(resume_id):
         "dashboard/analysis.html",
         resume=resume,
         result=result
+    )
+@resume_bp.route("/resume/download-report/<int:resume_id>")
+@login_required
+def download_report(resume_id):
+    from flask import send_file
+    from app.services.scoring import calculate_ats_score
+
+    resume = Resume.query.get_or_404(resume_id)
+
+    if resume.user_id != current_user.id:
+        flash("Unauthorized action.", "error")
+        return redirect(url_for("resume.history"))
+
+    if resume.ats_score is None or not resume.extracted_text:
+        flash("Please analyze this resume before downloading the report.", "error")
+        return redirect(url_for("resume.history"))
+
+    result = calculate_ats_score(resume.extracted_text)
+
+    reports_folder = os.path.join(os.getcwd(), "reports")
+    os.makedirs(reports_folder, exist_ok=True)
+
+    report_path = os.path.join(reports_folder, f"CVPilot_Report_{resume.id}.pdf")
+    generate_resume_report(resume, result, report_path)
+
+    return send_file(
+        report_path,
+        as_attachment=True,
+        download_name=f"{resume.original_filename}_ATS_Report.pdf"
     )
