@@ -468,3 +468,146 @@ body {
 .btn-view:hover {
   background: #e0e7ff;
 }
+/* ---------- NAVBAR LINKS ---------- */
+.navbar-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.nav-link:hover {
+  color: #6366f1;
+}
+/* ---------- ANALYSIS / SCORE PAGE ---------- */
+.score-card {
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.score-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.score-good {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.score-medium {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.score-low {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.score-number {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.score-info h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #1f2937;
+}
+
+.score-info p {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.analysis-section {
+  max-width: 800px;
+  margin: 0 auto 25px auto;
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px 26px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.analysis-section h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #1f2937;
+}
+
+.feedback-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feedback-list li {
+  font-size: 13px;
+  color: #4b5563;
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.feedback-list li::before {
+  content: "•";
+  color: #6366f1;
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+
+.keyword-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tag-matched {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.tag-missing {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.empty-text {
+  font-size: 13px;
+  color: #9ca3af;
+}

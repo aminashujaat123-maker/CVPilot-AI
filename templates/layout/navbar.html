@@ -1,5 +1,20 @@
 <nav class="navbar">
-  <div class="navbar-brand"><span class="brand-icon">📄</span> CVPilot AI</div>
+  <a
+    href="{{ url_for('dashboard.dashboard') }}"
+    class="navbar-brand"
+    style="text-decoration: none"
+  >
+    <span class="brand-icon">📄</span> CVPilot AI
+  </a>
+
+  <div class="navbar-links">
+    <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link"
+      >Dashboard</a
+    >
+    <a href="{{ url_for('resume.upload') }}" class="nav-link">Upload</a>
+    <a href="{{ url_for('resume.history') }}" class="nav-link">History</a>
+  </div>
+
   <div class="navbar-right">
     <span class="navbar-user">Hi, {{ current_user.full_name }}</span>
     <a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a>

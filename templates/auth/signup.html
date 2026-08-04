@@ -50,6 +50,14 @@ endblock %} {% block content %}
 
         <button type="submit" class="btn-primary">Create Account</button>
       </form>
+      <script>
+        const signupForm = document.querySelector("form");
+        signupForm.addEventListener("submit", function () {
+          const btn = signupForm.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.textContent = "Creating Account...";
+        });
+      </script>
 
       <p class="auth-footer-text">
         Already have an account?

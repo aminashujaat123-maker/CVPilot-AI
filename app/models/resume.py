@@ -21,6 +21,9 @@ class Resume(db.Model):
     status = db.Column(db.String(20), default="uploaded")  # uploaded / analyzed / failed
     extracted_text = db.Column(db.Text, nullable=True)
 
+    matched_keywords = db.Column(db.Text, nullable=True)   # comma-separated
+    missing_keywords = db.Column(db.Text, nullable=True)   # comma-separated
+
     user = db.relationship("User", backref=db.backref("resumes", lazy=True))
 
     def __repr__(self):

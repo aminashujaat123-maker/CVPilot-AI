@@ -9,6 +9,7 @@ from app.extensions import db
 from app.models.resume import Resume
 from app.utils.validators import allowed_file, get_file_extension
 from app.services.parser import extract_text, basic_clean_text
+from app.services.scoring import calculate_ats_score
 
 resume_bp = Blueprint("resume", __name__)
 
@@ -109,3 +110,32 @@ def view(resume_id):
         return redirect(url_for("resume.history"))
 
     return render_template("dashboard/analysis.html", resume=resume)
+
+
+@resume_bp.route("/resume/analyze/<int:resume_id>")
+@login_required
+def analyze(resume_id):
+    resume = Resume.query.get_or_404(resume_id)
+
+    if resume.user_id != current_user.id:
+        flash("Unauthorized action.", "error")
+        return redirect(url_for("resume.history"))
+
+    if not resume.extracted_text:
+        flash("Cannot analyze this resume — text extraction failed earlier.", "error")
+        return redirect(url_for("resume.history"))
+
+    result = calculate_ats_score(resume.extracted_text)
+
+    resume.ats_score = result["score"]
+    resume.matched_keywords = ", ".join(result["matched_keywords"])
+    resume.missing_keywords = ", ".join(result["missing_keywords"])
+    resume.status = "analyzed"
+
+    db.session.commit()
+
+    return render_template(
+        "dashboard/analysis.html",
+        resume=resume,
+        result=result
+    )

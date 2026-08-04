@@ -33,9 +33,9 @@ endblock %} {% block content %} {% include "layout/navbar.html" %}
           onsubmit="return confirm('Delete this resume?');"
         >
           <a
-            href="{{ url_for('resume.view', resume_id=resume.id) }}"
+            href="{{ url_for('resume.analyze', resume_id=resume.id) }}"
             class="btn-view"
-            >View</a
+            >Analyze</a
           >
           <button type="submit" class="btn-delete">Delete</button>
         </form>

@@ -45,7 +45,16 @@ def signup():
         )
 
         db.session.add(new_user)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            flash("An account with this email already exists.", "error")
+            return redirect(url_for("auth.signup"))
+
+        flash("Account created successfully! Please log in.", "success")
+        return redirect(url_for("auth.login"))
+        
 
         flash("Account created successfully! Please log in.", "success")
         return redirect(url_for("auth.login"))

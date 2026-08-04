@@ -4,23 +4,54 @@ endblock %} {% block content %} {% include "layout/navbar.html" %}
 <div class="dashboard-container">
   <div class="dashboard-welcome">
     <h1>{{ resume.original_filename }}</h1>
-    <p>
-      Extracted content preview — ATS scoring and keyword analysis coming soon.
-    </p>
+    <p>Here's how your resume performs against common ATS criteria.</p>
   </div>
 
-  {% if resume.extracted_text %}
-  <div class="text-preview-box">
-    <pre>{{ resume.extracted_text }}</pre>
+  <!-- Score Circle -->
+  <div class="score-card">
+    <div
+      class="score-circle score-{{ 'good' if result.score >= 70 else 'medium' if result.score >= 40 else 'low' }}"
+    >
+      <span class="score-number">{{ result.score }}</span>
+      <span class="score-label">/ 100</span>
+    </div>
+    <div class="score-info">
+      <h3>ATS Compatibility Score</h3>
+      <p>{{ result.word_count }} words analyzed</p>
+    </div>
   </div>
-  {% else %}
-  <div class="empty-state">
-    <p>
-      ⚠️ Text extraction failed for this resume. It may be image-based,
-      password-protected, or corrupted.
-    </p>
+
+  <!-- Feedback -->
+  <div class="analysis-section">
+    <h3>📋 Feedback</h3>
+    <ul class="feedback-list">
+      {% for msg in result.feedback %}
+      <li>{{ msg }}</li>
+      {% endfor %}
+    </ul>
   </div>
-  {% endif %}
+
+  <!-- Matched Keywords -->
+  <div class="analysis-section">
+    <h3>✅ Matched Keywords ({{ result.matched_keywords|length }})</h3>
+    <div class="keyword-tags">
+      {% for kw in result.matched_keywords %}
+      <span class="tag tag-matched">{{ kw }}</span>
+      {% else %}
+      <p class="empty-text">No matched keywords found.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Missing Keywords -->
+  <div class="analysis-section">
+    <h3>❌ Missing Keywords ({{ result.missing_keywords|length }})</h3>
+    <div class="keyword-tags">
+      {% for kw in result.missing_keywords %}
+      <span class="tag tag-missing">{{ kw }}</span>
+      {% endfor %}
+    </div>
+  </div>
 
   <a
     href="{{ url_for('resume.history') }}"
