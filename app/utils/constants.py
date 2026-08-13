@@ -34,3 +34,21 @@ ACTION_VERBS = [
 # Minimum/maximum word count considered "healthy" for an ATS-friendly resume
 MIN_WORD_COUNT = 150
 MAX_WORD_COUNT = 1000
+# Maps a canonical skill keyword to its common abbreviations/alternate forms.
+# If ANY of these alternate forms appear in the resume, the canonical keyword
+# is considered "matched".
+SKILL_SYNONYMS = {
+    "object oriented programming": ["oop"],
+    "machine learning": ["ml"],
+    "javascript": ["js"],
+    "artificial intelligence": ["ai"],
+    "data structures": ["ds"],
+    "database": ["db", "mysql", "postgresql", "mongodb", "sqlite"],
+    "sql": ["mysql", "postgresql", "sqlite", "structured query language"],
+    "microsoft office": ["ms office", "office365", "office 365"],
+    "user interface": ["ui"],
+    "user experience": ["ux"],
+    "application programming interface": ["api"],
+    "continuous integration": ["ci/cd", "ci cd"],
+    "version control": ["git", "github", "gitlab"],
+}
