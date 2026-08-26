@@ -17,6 +17,20 @@ CVPilot AI helps job seekers and students improve their resumes before applying 
 - **Resume History** — View, re-analyze, or delete previously uploaded resumes
 - **Profile Settings** — Edit profile details and change password
 
+## Screenshots
+
+### Dashboard
+
+![Dashboard](static/img/screenshots/dashboard.png)
+
+### Resume Analysis
+
+![Analysis](static/img/screenshots/analysis.png)
+
+### Sign Up
+
+![Sign Up](static/img/screenshots/signup.png)
+
 ## Tech Stack
 
 **Backend:** Python 3.12, Flask, Flask-SQLAlchemy, Flask-Bcrypt, Flask-Login
